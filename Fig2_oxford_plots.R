@@ -48,10 +48,6 @@ make_pairwise_dataframe <- function(df1, df2){
   return(pairwise_df)
 }
 
-### Main ###
-setwd('/Users/cw22/Documents/R_work/Hyles_analysis/')
-
-
 make_oxford_plot <- function(df){
   colour_palette <- c("black", "darkgrey", "#CC9088", "#6CE848", "#E6E6E0", "#D88E43", "#B5A4E2", "#6D7DE0",
                       "#DE4B44", "#E499D1", "#669F66", "#E054DC", "#93C656",
@@ -78,6 +74,9 @@ make_oxford_plot <- function(df){
     theme(strip.text = element_text(hjust = 0))
   return(the_plot)
 }
+
+### Main ###
+setwd('/Users/cw22/Documents/R_work/Hyles_analysis/')
 
 Hyles_euphoribae <- read_busco('../Data/BUSCOs/All/Hyles_euphorbiae.tsv')
 Hyles_vespertilio <- read_busco('../Data/BUSCOs/All/Hyles_vespertilio.tsv')
@@ -113,7 +112,6 @@ HylesE_vs_Deilephila <- make_pairwise_dataframe(Hyles_euphoribae,Deilephila_porc
 HylesE_vs_HylesV <- make_pairwise_dataframe(Hyles_euphoribae,Hyles_vespertilio)
 HylesE_vs_Laothoe <- make_pairwise_dataframe(Hyles_euphoribae, Laothoe_populi)
 HylesE_vs_Manduca <- make_pairwise_dataframe(Hyles_euphoribae,Manduca_sexta)
-
 
 # species to be on x-axes needs to be specified second i.e. "x" actually is y
 HylesE_vs_HylesV <- filter_buscos_x(HylesE_vs_HylesV,2) %>% filter_buscos_y(1)
