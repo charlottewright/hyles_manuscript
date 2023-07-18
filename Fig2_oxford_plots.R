@@ -70,7 +70,7 @@ make_oxford_plot <- function(df){
     theme(axis.text.x = element_blank(), axis.text.y = element_blank()) +
     geom_point(data=df, aes(x=sequence_y_min, y=sequence_x_min), color="white") + # needed to scale each box
     geom_point(data=df, aes(x=sequence_y_max, y=sequence_x_max), color="white")  +   # needed to scale each box +
-  scale_color_manual(values=colour_palette) +
+    scale_color_manual(values=colour_palette) +
     theme(strip.text = element_text(hjust = 0))
   return(the_plot)
 }
@@ -78,13 +78,14 @@ make_oxford_plot <- function(df){
 ### Main ###
 setwd('/Users/cw22/Documents/R_work/Hyles_analysis/')
 
-Hyles_euphoribae <- read_busco('../Data/BUSCOs/All/Hyles_euphorbiae.tsv')
-Hyles_vespertilio <- read_busco('../Data/BUSCOs/All/Hyles_vespertilio.tsv')
-Deilephila_porcellus <- read_busco('../Data/BUSCOs/All/Deilephila_porcellus.tsv')
-Manduca_sexta <- read_busco('../Data/BUSCOs/All/Manduca_sexta.tsv')
-Laothoe_populi <- read_busco('../Data/BUSCOs/All/Laothoe_populi.tsv')
-
-chr_conversions <- read.csv('../../Hyles_analysis/Table_S1_conversions.csv', header=FALSE, skip=4, sep=',')
+Hyles_euphoribae <- read_busco('Data/Hyles_euphorbiae.tsv')
+Hyles_vespertilio <- read_busco('Data/Hyles_vespertilio.tsv')
+Deilephila_porcellus <- read_busco('Data/Deilephila_porcellus.tsv')
+Manduca_sexta <- read_busco('Data/Manduca_sexta.tsv')
+Laothoe_populi <- read_busco('Data/Laothoe_populi.tsv')
+Merian_assignments_ref <- read_busco('../Chromosome_evolution_Lepidoptera/Data/syngraph/Final_Merians_based_on_syn_n2_from_r2_m5_full_table.tsv')[,1:2]
+chr_conversions <- read.csv('Table_S1_conversions.csv', header=FALSE, skip=4, sep=',')
+colnames(Merian_assignments_ref) <- c('busco_id', 'Merian')
 
 # Reformat data
 colnames(chr_conversions) <- c('Bmori_chr', 
@@ -214,7 +215,7 @@ HylesE_vs_Deilephila$sequence_x_min <- 0
 sequences_to_flip <- c("CM041030.1", "CM041037.1", "CM041051.1", "CM041046.1", "CM041031.1",
                        "CM041042.1", "CM041044.1", "CM041035.1", "CM041056.1",
                        "CM041052.1","CM041054.1" )
-  
+
 # Flip specified sequences
 for (i in sequences_to_flip){
   subset_df <- HylesE_vs_Deilephila %>% filter(Sequence.x == i)
@@ -235,14 +236,13 @@ HylesE_vs_Deilephila$Sequence.x_f <- HylesE_vs_Deilephila$Sequence.x
 sequence_x_order <- HylesE_vs_Deilephila %>% arrange(mxGpos) %>% select(Sequence.x) %>% unique() %>% pull %>% rev()
 sequence_y_order <- HylesE_vs_Deilephila %>% arrange(mxGpos_y) %>% select(Sequence.y) %>% unique() %>% pull() %>% rev()
 
-
 sequence_y_order <- c("LR999970.1","LR999971.1","LR999972.1","LR999975.1",
-                     "LR999973.1","LR999974.1","LR999978.1","LR999980.1",
-                    "LR999976.1","LR999977.1","LR999979.1","LR999981.1",
-                   "LR999983.1","LR999984.1","LR999982.1","LR999985.1",
-                  "LR999987.1","LR999986.1","LR999988.1","LR999989.1",
-                 "LR999990.1","LR999991.1","LR999992.1","LR999993.1",
-                "LR999995.1","LR999994.1","LR999996.1","LR999997.1",
+                      "LR999973.1","LR999974.1","LR999978.1","LR999980.1",
+                      "LR999976.1","LR999977.1","LR999979.1","LR999981.1",
+                      "LR999983.1","LR999984.1","LR999982.1","LR999985.1",
+                      "LR999987.1","LR999986.1","LR999988.1","LR999989.1",
+                      "LR999990.1","LR999991.1","LR999992.1","LR999993.1",
+                      "LR999995.1","LR999994.1","LR999996.1","LR999997.1",
                       "LR999998.1")
 HylesE_vs_Deilephila$Sequence.x_f <- factor(HylesE_vs_Deilephila$Sequence.x, levels = sequence_x_order)
 HylesE_vs_Deilephila$Sequence.y_f <- factor(HylesE_vs_Deilephila$Sequence.y, levels = sequence_y_order)
@@ -289,13 +289,12 @@ HylesE_vs_Manduca$Sequence.y_f <- HylesE_vs_Manduca$Sequence.y
 sequence_x_order <- HylesE_vs_Manduca %>% arrange(mxGpos) %>% select(Sequence.x) %>% unique() %>% pull %>% rev()
 sequence_y_order <- HylesE_vs_Manduca %>% arrange(mxGpos_y) %>% select(Sequence.y) %>% unique() %>% pull() %>% rev()
 
-
-sequence_y_order <- c("MsChr1=Z","MsChr22","MsChr15","MsChr12","MsChr5",
+sequence_y_order <- c("MsChr1=Z","MsChr22","MsChr5","MsChr12","MsChr15",
                       "MsChr4","MsChr2","MsChr17",
                       "MsChr10","MsChr13","MsChr9",
                       "MsChr23","MsChr11","MsChr18","MsChr6",
-                      "MsChr8","MsChr21","MsChr19","MsChr3",
-                      "MsChr25","MsChr16","MsChr14","MsChr7","MsChr20","MsChr28",
+                      "MsChr8","MsChr3", "MsChr21","MsChr19",
+                      "MsChr25","MsChr14","MsChr16","MsChr7","MsChr20","MsChr28",
                       "MsChr27","MsChr24","MsChr26")
 
 HylesE_vs_Manduca$Sequence.x_f <- factor(HylesE_vs_Manduca$Sequence.x, levels = sequence_x_order)
@@ -353,35 +352,35 @@ HylesE_vs_Laothoe$Sequence.x_f <- factor(HylesE_vs_Laothoe$Sequence.x, levels = 
 HylesE_vs_Laothoe$Sequence.y_f <- factor(HylesE_vs_Laothoe$Sequence.y, levels = sequence_y_order)
 
 HylesE_vs_HylesV_plot <- make_oxford_plot(HylesE_vs_HylesV) + 
-  xlab("Hyles vespertilio") +   ylab("Hyles euphoribae") +
+  xlab("Hyles vespertilio") +   ylab("Hyles euphorbiae") +
   theme(axis.title = element_text(face="italic", size=20),
         legend.position = "bottom") + 
   guides(colour=guide_legend(override.aes = list(size=4), title="Merian element", nrow=3,byrow=TRUE)) 
 
 HylesE_vs_Deilephila_plot <- make_oxford_plot(HylesE_vs_Deilephila) + 
-  xlab("Deilephila porcellus") +   ylab("Hyles euphoribae") +
+  xlab("Deilephila porcellus") +   ylab("Hyles euphorbiae") +
   theme(axis.title = element_text(face="italic", size=20),
         legend.position = "bottom") + 
   guides(colour=guide_legend(override.aes = list(size=4), title="Merian element", nrow=3,byrow=TRUE)) 
 
 HylesE_vs_Manduca_plot <- make_oxford_plot(HylesE_vs_Manduca) + 
-  xlab("Manduca sexta") +   ylab("Hyles euphoribae") +
+  xlab("Manduca sexta") +   ylab("Hyles euphorbiae") +
   theme(axis.title = element_text(face="italic", size=20),
         legend.position = "bottom") + 
   guides(colour=guide_legend(override.aes = list(size=4), title="Merian element", nrow=3,byrow=TRUE)) 
 
 HylesE_vs_Laothoe_plot <- make_oxford_plot(HylesE_vs_Laothoe) + 
-  xlab("Laothoe populi") +   ylab("Hyles euphoribae") +
+  xlab("Laothoe populi") +   ylab("Hyles euphorbiae") +
   theme(axis.title = element_text(face="italic", size=20),
         legend.position = "bottom") + 
   guides(colour=guide_legend(override.aes = list(size=4), title="Merian element", nrow=3,byrow=TRUE)) 
 
-HylesE_vs_HylesV_plot <- HylesE_vs_HylesV_plot + ggtitle('a)') + theme(title = element_text(face="bold"))
-HylesE_vs_Deilephila_plot <- HylesE_vs_Deilephila_plot + ggtitle('b)') + theme(title = element_text(face="bold"))
-HylesE_vs_Manduca_plot <- HylesE_vs_Manduca_plot + ggtitle('c)') + theme(title = element_text(face="bold"))
-HylesE_vs_Laothoe_plot <- HylesE_vs_Laothoe_plot + ggtitle('d)') + theme(title = element_text(face="bold"))
+HylesE_vs_HylesV_plot <- HylesE_vs_HylesV_plot + ggtitle('a') + theme(title = element_text(face="bold")) + theme(legend.position = "none")
+HylesE_vs_Deilephila_plot <- HylesE_vs_Deilephila_plot + ggtitle('b') + theme(title = element_text(face="bold"))+ theme(legend.position = "none")
+HylesE_vs_Manduca_plot <- HylesE_vs_Manduca_plot + ggtitle('c') + theme(title = element_text(face="bold"))+ theme(legend.position = "none")
+HylesE_vs_Laothoe_plot <- HylesE_vs_Laothoe_plot + ggtitle('d') + theme(title = element_text(face="bold"))+ theme(legend.position = "none")
 
-ggsave('../../Hyles_analysis/revised_panelA.pdf', plot=HylesE_vs_HylesV_plot)
-ggsave('../../Hyles_analysis/revised_panelB.pdf', plot=HylesE_vs_Deilephila_plot)
-ggsave('../../Hyles_analysis/revised_panelC.pdf', plot=HylesE_vs_Manduca_plot)
-ggsave('../../Hyles_analysis/revised_panelD.pdf', plot=HylesE_vs_Laothoe_plot)
+ggsave('figures/revised_panelA_180723.pdf', plot=HylesE_vs_HylesV_plot, width=9, height=10)
+ggsave('figures/revised_panelB_180723.pdf', plot=HylesE_vs_Deilephila_plot, width=9, height=10)
+ggsave('figures/revised_panelC_180723.pdf', plot=HylesE_vs_Manduca_plot, width=9, height=10)
+ggsave('figures/revised_panelD_180723.pdf', plot=HylesE_vs_Laothoe_plot, width=9, height=10)
